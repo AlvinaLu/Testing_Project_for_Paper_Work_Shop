@@ -1,0 +1,67 @@
+spring:
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME:paperworkshop}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:15432/paperworkshop}
+    password: ${SPRING_DATASOURCE_PASSWORD:paperworkshop}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL93Dialect
+  data:
+    jpa:
+      repositories:
+        enabled: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST_AND_PORT:localhost:9092}
+    properties:
+      sasl:
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=${kafka_username:'admin'} password=${kafka_password:'admin-secret'};
+        mechanism: PLAIN
+      security:
+        protocol: SASL_PLAINTEXT
+    consumer:
+      auto-offset-reset: earliest
+      group-id: example
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 1
+      fetch-max-wait: 36000
+      enable-auto-commit: false
+      client-id: example
+    producer:
+      client-id: example
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 2
+    jaas:
+      enabled: true
+    listener:
+      poll-timeout: 1800000
+      concurrency: 1
+      ack-mode: manual_immediate
+server:
+  error:
+    include-message: always
+  port: ${PORT:8080}
+
+kafka:
+  enabled: ${ENABLE_KAFKA:false}
+elastic:
+  enabled: ${ENABLE_ELASTIC:false}
+  host-and-port: ${ELASTIC_HOST_AND_PORT:localhost:9200}
+
+
+logging:
+  pattern:
+    file:
+      "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [${HOSTNAME}] [%thread] %level %logger{36}@%method:%line - %msg%n"
+    console:
+      "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [${HOSTNAME}] [%thread] %level %logger{36}@%method:%line - %msg%n"
+  level:
+    org.springframework: INFO
+    code.code: INFO
+  file.name: log/application.log
+

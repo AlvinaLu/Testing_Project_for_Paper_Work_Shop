@@ -1,0 +1,9 @@
+.idea
+.gradle
+/build
+/src/main/resources/application-dev.properties
+/src/main/resources/static
+/docker/*.jar
+/docker/init.sql
+/docker/log
+/log
